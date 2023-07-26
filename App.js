@@ -1,51 +1,50 @@
-import { useState } from 'react';
-import './App.css';
 
-function App() {
+import React, { useState } from 'react';
 
+const TodoList = () => {
+  const [tasks, setTasks] = useState([]);
+  const [taskInput, setTaskInput] = useState('');
 
-  const [inputList, setInputList] = useState("");
-  const [Items, setItems] = useState([]);
+  const addTask = () => {
+    const trimmedTask = taskInput.trim();
+    if (trimmedTask === '') {
+      alert('Please enter a valid task.');
+      return;
+    }
 
-  const itemEvent = (event) => {
-    setInputList(event.target.value);
+    setTasks([...tasks, trimmedTask]);
+    setTaskInput('');
   };
 
-  const listOfItems = () => {
-    setItems((oldItems) => {
-      return [...oldItems, inputList];
-    });
-    setInputList(" ");
+  const removeTask = (index) => {
+    const updatedTasks = tasks.filter((_, i) => i !== index);
+    setTasks(updatedTasks);
   };
-
 
   return (
-    <>
+    <div>
+      <h1>Todo List</h1>
+      <input
+        type="text"
+        value={taskInput}
+        onChange={(e) => setTaskInput(e.target.value)}
+        placeholder="Enter task"
+      />
+      <button onClick={addTask}>Add Task</button>
 
-      <div className="main_div">
-        <div className="Todo_div">
-
-          <br />
-          <h1>ToDo List</h1>
-          <br />
-
-          <input type="text" placeholder='Add your Item' onChange={itemEvent} />
-          <button onClick={listOfItems}>+</button>
-
-
-          <ol>
-
-            {Items.map((itemValue) => {
-              return <li>{itemValue}</li>
-            })}
-
-          </ol>
-
-        </div>
-      </div>
-
-    </>
+      <ul>
+        {tasks.map((task, index) => (
+          <li key={index}>
+            <label>
+              <input type="checkbox" />
+              <span>{task}</span>
+            </label>
+            <button onClick={() => removeTask(index)}>Remove</button>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
-}
+};
 
-export default App;
+export default TodoList;
